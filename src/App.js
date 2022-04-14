@@ -1,24 +1,29 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useContext } from 'react';
+import './App.scss';
+import Home  from './pages/home/Home';
+import Watch from './pages/watch/Watch';
+import Register from './pages/register/Register';
+import Login from './pages/login/Login';
+import { AuthContext } from './authContext/AuthContext';
+import { Routes, Route } from 'react-router-dom';
 
 function App() {
+  const {user} = useContext(AuthContext);
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+      <Routes>        
+        <Route exact path="/" element={user ? <Home /> : <Register />} />
+        <Route path="/register" element={!user ? <Register /> : <Home />} />
+        <Route path="/login" element={!user ? <Login /> : <Home />} />
+        {
+          user && (
+            <>
+              <Route path="/movies" element={<Home type="movie" />} />
+              <Route path="/series" element={<Home type="series" />} />
+              <Route path="/watch" element={<Watch />} />
+            </>
+          )
+        }        
+      </Routes>
   );
 }
 
